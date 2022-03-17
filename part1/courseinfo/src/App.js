@@ -55,6 +55,6 @@ const Total = (props) => {
       props.parts[2].exercises + 
       props.parts[3].exercises}</p>
   )  
-}   
+}     
 
 export default App
