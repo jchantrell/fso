@@ -40,11 +40,19 @@ const Button = (props) => (
 const Header = props => <h1>{props.data.text}</h1>
 
 const Statistics = (props) => {
-  return (
+  if (props.all === 0){
+    return (
+    <div>
+      <p>leave some feedback</p>
+    </div>
+    )
+  }
+  else return (
   <div>
     <p>good {props.good}</p>
     <p>neutral {props.neutral}</p>
     <p>bad {props.bad}</p>
+    <p>all {props.all}</p>
     <p>average {props.average}</p>
     <p>percent {props.percent}% </p>
   </div>
