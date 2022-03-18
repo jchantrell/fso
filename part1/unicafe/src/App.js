@@ -6,6 +6,10 @@ const App = () => {
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
 
+  const all = good + neutral + bad
+  const average = (good - bad) / all
+  const percent = (good / all) * 100
+
   const headers = [
     {
       text: 'give feedback'
@@ -25,6 +29,8 @@ const App = () => {
       <p>good {good}</p>
       <p>neutral {neutral}</p>
       <p>bad {bad}</p>
+      <p>average {average}</p>
+      <p>percent {percent}%</p>
     </div>
   )
 }
