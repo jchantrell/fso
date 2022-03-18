@@ -26,11 +26,7 @@ const App = () => {
       <Button handleClick={() => setNeutral(neutral + 1)} text="neutral" />
       <Button handleClick={() => setBad(bad + 1)} text="bad" />
       <Header data={headers[1]} />
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>average {average}</p>
-      <p>percent {percent}%</p>
+      <Statistics good={good} neutral={neutral} bad={bad} all={all} average={average} percent={percent}/>
     </div>
   )
 }
@@ -42,5 +38,18 @@ const Button = (props) => (
   )
 
 const Header = props => <h1>{props.data.text}</h1>
+
+const Statistics = (props) => {
+  return (
+  <div>
+    <p>good {props.good}</p>
+    <p>neutral {props.neutral}</p>
+    <p>bad {props.bad}</p>
+    <p>average {props.average}</p>
+    <p>percent {props.percent}% </p>
+  </div>
+  )
+
+}
 
 export default App
