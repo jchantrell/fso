@@ -47,15 +47,23 @@ const Statistics = (props) => {
     </div>
     )
   }
+
   else return (
   <div>
-    <p>good {props.good}</p>
-    <p>neutral {props.neutral}</p>
-    <p>bad {props.bad}</p>
-    <p>all {props.all}</p>
-    <p>average {props.average}</p>
-    <p>percent {props.percent}% </p>
+    <Stat text="good" value={props.good} /> 
+    <Stat text="neutral" value={props.neutral} />
+    <Stat text="bad" value={props.bad} />
+    <Stat text="all" value={props.all} />
+    <Stat text="average" value={props.average} />
+    <Stat text="percent" value={props.percent} />
   </div>
+  )
+
+}
+
+const Stat = (props) => {
+  return (
+    <p>{props.text} {props.value}</p>
   )
 
 }
