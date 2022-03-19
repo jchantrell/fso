@@ -15,22 +15,52 @@ const App = () => {
   const [selected, setSelected] = useState(0)
   const [scores, setScores] = useState(Array(max).fill(0))
   const current = anecdotes.indexOf(anecdotes[selected])
-
+  const headers = [
+    {
+      text: 'anecdote of the day'
+    },
+    {
+      text: 'anecdote with most votes'
+    }
+  ]
 
   return (
     <div>
+      <Header data={headers[0]} />
       <div>{anecdotes[selected]}</div>
-      <div>{scores[selected]}</div>
+      <div> has {scores[selected]} votes</div>
       <Button handleClick={() => Vote(scores, setScores, current)} text="vote" />
       <Button handleClick={() => setSelected(Math.floor(Math.random() * max))}text="another anecdote" />
+      <Header data={headers[1]} />
+      <Highest scores={scores} anecdotes={anecdotes} current={current} />
     </div>
   )
 }
+
+const Header = props => <h1>{props.data.text}</h1>
 
 const Vote = (scores, setScores, current) => {
   const newScore = [...scores]
   newScore[current] += 1
   setScores(newScore)
+}
+
+const Highest = (props) => {
+
+  let largest = 0;
+  let index = props.scores.indexOf(Math.max(...props.scores))
+
+  for (let i = 0; i < props.scores.length; i++){
+    if (props.scores[i] > largest) {
+      largest = props.scores[i]
+    }
+  }
+  return (
+    <div>
+      <p>"{props.anecdotes[index]}"</p>
+      <p> has the most votes, at {largest}</p>
+    </div>
+    )
 }
 
 const Button = (props) => (
