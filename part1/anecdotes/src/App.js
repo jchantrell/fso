@@ -46,15 +46,8 @@ const Vote = (scores, setScores, current) => {
 }
 
 const Highest = (props) => {
-
-  let largest = 0;
   let index = props.scores.indexOf(Math.max(...props.scores))
-
-  for (let i = 0; i < props.scores.length; i++){
-    if (props.scores[i] > largest) {
-      largest = props.scores[i]
-    }
-  }
+  let largest = props.scores[index]
   return (
     <div>
       <p>"{props.anecdotes[index]}"</p>
