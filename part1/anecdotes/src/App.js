@@ -10,17 +10,27 @@ const App = () => {
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients'
   ]
-   
-  const [selected, setSelected] = useState(0)
 
   const max = anecdotes.length
+  const [selected, setSelected] = useState(0)
+  const [scores, setScores] = useState(Array(max).fill(0))
+  const current = anecdotes.indexOf(anecdotes[selected])
+
 
   return (
     <div>
       <div>{anecdotes[selected]}</div>
-      <Button handleClick={() => setSelected(Math.floor(Math.random() * max))} text="another anecdote" />
+      <div>{scores[selected]}</div>
+      <Button handleClick={() => Vote(scores, setScores, current)} text="vote" />
+      <Button handleClick={() => setSelected(Math.floor(Math.random() * max))}text="another anecdote" />
     </div>
   )
+}
+
+const Vote = (scores, setScores, current) => {
+  const newScore = [...scores]
+  newScore[current] += 1
+  setScores(newScore)
 }
 
 const Button = (props) => (
