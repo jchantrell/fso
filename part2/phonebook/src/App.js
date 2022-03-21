@@ -10,6 +10,11 @@ const App = () => {
       name: newPerson,
       id: persons.length + 1,
     }
+
+    if (PersonExists(persons, personObject.name) === true){
+      alert(`${personObject.name} already exists.`)
+    }
+    else
     setPersons(persons.concat(personObject))
     setNewPerson('')
   }
@@ -39,6 +44,12 @@ const App = () => {
       </ul>
     </div>
   )
+}
+
+const PersonExists = (persons, newName) => {
+  return persons.some(function(person) {
+    return person.name === newName
+  })
 }
 
 const Person = ({ person }) => {
