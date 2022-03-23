@@ -10,7 +10,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
-  const [foundPersons, setFoundPersons] = useState(persons)
+  const filteredPersons = persons.filter((person) => person.name.toLowerCase().includes(filter.toLowerCase())); 
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -38,17 +38,7 @@ const App = () => {
   }
 
   const handleFilter = (event) => {
-    const keyword = event.target.value;
-
-    if (keyword !== '') {
-      const results = persons.filter((person) => {
-        return person.name.toLowerCase().startsWith(keyword.toLowerCase());
-      });
-      setFoundPersons(results);
-    } else {
-      setFoundPersons(persons);
-    }
-    setFilter(keyword);
+    setFilter(event.target.value)
   }
 
   return (
@@ -76,7 +66,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      <Persons persons={foundPersons} />
+      <Persons persons={filteredPersons} />
     </div>
   )
 }
