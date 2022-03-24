@@ -66,10 +66,12 @@ const Country = ({ country }) => {
 
 const Languages = ({ languages }) => {
 
+  const langs = Object.entries(languages)
+
   return (
     <ul>
-      {languages.map(language => 
-        <Language key={language.value} language={language.value} />
+      {langs.map(lang => 
+        <Language key={lang.value} language={lang[1]} />
       )}
     </ul>
   )
@@ -92,7 +94,7 @@ const CountryInfo = (props) => {
       <p>Areas {country.area}</p>
       <h4>Languages</h4>
       <Languages languages={country.languages} />
-      <img src={country.flags.png}></img>
+      <img src={country.flags.png} alt="flag"></img>
     </div>
   )
 }
