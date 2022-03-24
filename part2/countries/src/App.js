@@ -22,8 +22,8 @@ const App = () => {
   return (
     <div>
       <h2>Search countries</h2>
-      <Filter filter={filter} handleFilter={handleFilter}/>
-      <Countries countries={filteredCountries}/>
+      <Filter filter={filter} handleFilter={handleFilter} />
+      <Countries countries={filteredCountries} />
     </div>
   )
 }
@@ -45,8 +45,9 @@ const Countries = (props) => {
     )
   }
   if (props.countries.length === 1){
+    const country = props.country[0]
     return (
-      <CountryInfo country={props.countries} />
+      <CountryInfo country={country} />
     )
   }
   else return (
@@ -58,20 +59,30 @@ const Countries = (props) => {
   )
 }
 
-const Country = ({ country }) => {
+const Country = (props) => {
+  const country = props.country
   return (
-    <li>{country.name.common}</li>
+    <div>
+      <li>{country.name.common} <Button handleClick={() => ShowCountry(country)} text="show" /></li>
+    </div>
   )
 }
 
+const ShowCountry = (props) => {
+  console.log(props)
+}
+
+const Button = (props) => (
+  <button onClick={props.handleClick}>
+    {props.text}
+  </button>
+  )
+
 const Languages = ({ languages }) => {
-
-  const langs = Object.entries(languages)
-
   return (
     <ul>
-      {langs.map(lang => 
-        <Language key={lang.value} language={lang[1]} />
+      {Object.entries(languages).map(lang => 
+        <Language key={lang[1]} language={lang[1]} />
       )}
     </ul>
   )
@@ -83,10 +94,7 @@ const Language = ({ language }) => {
   )
 }
 
-const CountryInfo = (props) => {
-  const country = props.country[0]
-
-
+const CountryInfo = (country) => {
   return (
     <div>
       <h2>{country.name.common}</h2>
@@ -98,7 +106,5 @@ const CountryInfo = (props) => {
     </div>
   )
 }
-
-
 
 export default App
