@@ -23,7 +23,7 @@ const App = () => {
     <div>
       <h2>Search countries</h2>
       <Filter filter={filter} handleFilter={handleFilter} />
-      <Countries countries={filteredCountries} />
+      <Countries countries={filteredCountries} filter={filter} setFilter={setFilter} filteredCountries={filteredCountries} />
     </div>
   )
 }
@@ -45,7 +45,7 @@ const Countries = (props) => {
     )
   }
   if (props.countries.length === 1){
-    const country = props.country[0]
+    const country = props.countries[0]
     return (
       <CountryInfo country={country} />
     )
@@ -53,7 +53,7 @@ const Countries = (props) => {
   else return (
     <ul>
       {props.countries.map(country => 
-        <Country key={country.name.common} country={country} />
+        <Country key={country.name.common} country={country} filter={props.filter} setFilter={props.setFilter} filteredCountries={props.filteredCountries}/>
       )}
     </ul>
   )
@@ -63,13 +63,15 @@ const Country = (props) => {
   const country = props.country
   return (
     <div>
-      <li>{country.name.common} <Button handleClick={() => ShowCountry(country)} text="show" /></li>
+      <li>{country.name.common} 
+      <Button handleClick={() => ShowCountry(country, props.setFilter)}
+       text="show" /></li>
     </div>
   )
 }
 
-const ShowCountry = (props) => {
-  console.log(props)
+const ShowCountry = (country, setFilter) => {
+  setFilter(country.name.common)
 }
 
 const Button = (props) => (
@@ -94,15 +96,15 @@ const Language = ({ language }) => {
   )
 }
 
-const CountryInfo = (country) => {
+const CountryInfo = (props) => {
   return (
     <div>
-      <h2>{country.name.common}</h2>
-      <p>Capital {country.capital}</p>
-      <p>Areas {country.area}</p>
+      <h2>{props.country.name.common}</h2>
+      <p>Capital {props.country.capital}</p>
+      <p>Areas {props.country.area}</p>
       <h4>Languages</h4>
-      <Languages languages={country.languages} />
-      <img src={country.flags.png} alt="flag"></img>
+      <Languages languages={props.country.languages} />
+      <img src={props.country.flags.png} alt="flag"></img>
     </div>
   )
 }
