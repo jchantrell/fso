@@ -118,7 +118,7 @@ const CountryWeather = (props) => {
 
   useEffect(() => {
     axios
-      .get(`http://api.openweathermap.org/data/2.5/weather?lat=${props.country.latlng[0]}&lon=${props.country.latlng[1]}&appid=${apiKey}`)
+      .get(`http://api.openweathermap.org/data/2.5/weather?lat=${props.country.latlng[0]}&lon=${props.country.latlng[1]}&appid=${apiKey}&units=metric`)
       .then(response => {
         setWeather(response.data)
         setLoading(false);   
@@ -131,7 +131,7 @@ const CountryWeather = (props) => {
 
   return (
     <div>
-      <p>temp is {weather.main.temp / 10}</p>
+      <p>temp is {weather.main.temp}</p>
       <img src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}></img>
       <p>wind speed is {weather.wind.speed}</p>
     </div>
