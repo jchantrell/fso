@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import personsService from './services/persons'
 import axios from 'axios'
 
 const App = () => {
@@ -9,10 +10,10 @@ const App = () => {
   const filteredPersons = persons.filter((person) => person.name.toLowerCase().includes(filter.toLowerCase()))
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
+    personsService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
       })
   }, [])
 
@@ -28,9 +29,13 @@ const App = () => {
       alert(`${personObject.name} already exists.`)
     }
     else
-    setPersons(persons.concat(personObject))
-    setNewName('')
-    setNewNumber('')
+    axios
+      .post('http://localhost:3001/persons', personObject)
+      .then(response => {
+        setPersons(persons.concat(response.data))
+        setNewName('')
+        setNewNumber('')
+      })
   }
 
   const handleNameChange = (event) => {
