@@ -10,10 +10,10 @@ const App = () => {
     axios
       .get('https://restcountries.com/v3.1/all')
       .then(response => {
-        console.log(response.data)
         setCountries(response.data)
       })
   }, [])
+
 
   const handleFilter = (event) => {
     setFilter(event.target.value)
@@ -105,8 +105,38 @@ const CountryInfo = (props) => {
       <h4>Languages</h4>
       <Languages languages={props.country.languages} />
       <img src={props.country.flags.png} alt="flag"></img>
+      <h2>Weather in {props.country.capital}</h2>
+      <CountryWeather country={props.country} />
     </div>
   )
+}
+
+const CountryWeather = (props) => {
+  const apiKey = process.env.REACT_APP_API_KEY
+  const [isLoading, setLoading] = useState(true);
+  const [weather, setWeather] = useState([])
+
+  useEffect(() => {
+    axios
+      .get(`http://api.openweathermap.org/data/2.5/weather?lat=${props.country.latlng[0]}&lon=${props.country.latlng[1]}&appid=${apiKey}`)
+      .then(response => {
+        setWeather(response.data)
+        setLoading(false);   
+      })
+  }, [])
+
+  if (isLoading) {
+    return <p>Loading</p>
+  }
+
+  return (
+    <div>
+      <p>temp is {weather.main.temp / 10}</p>
+      <img src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}></img>
+      <p>wind speed is {weather.wind.speed}</p>
+    </div>
+  )
+
 }
 
 export default App
