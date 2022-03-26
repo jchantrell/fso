@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import personsService from './services/persons'
 
 const App = () => {
+  const [notification, setNotification] = useState(null)
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
@@ -36,7 +37,7 @@ const App = () => {
             .then(setPersons(updatedPersons))
         }
       }
-      else alert(`${personObject.name} is already in the phone book.`)
+      else alert(`${personObject.name} is already in the phonebook.`)
     }
 
     else   
@@ -46,6 +47,12 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
+        setNotification(
+          `${personObject.name} has been added to the phonebook.`
+        )
+        setTimeout(() => {
+          setNotification(null)
+        }, 5000)
       })
   }
 
@@ -57,12 +64,18 @@ const App = () => {
     if (window.confirm(`Do you want to remove ${person.name} from the phonebook?`)){
       personsService
         .remove(id)
+        .then(setNotification(
+          `${person.name} has been removed from the phonebook.`
+        ))
         .then(updatedPersons.splice(toRemove, 1))
         .then(setPersons(updatedPersons))
         .catch(error => {
-          alert(
-            `${person.name} was already deleted from server`
+          setNotification(
+            `${person.name} was already removed from the phonebook.`
           )
+          setTimeout(() => {
+            setNotification(null)
+          }, 5000)
           setPersons(persons.filter(p => p.id !== id))
         })
 
@@ -86,6 +99,7 @@ const App = () => {
       <h2>Phonebook</h2>
       <Filter filter={filter} handleFilter={handleFilter}/>
       <h2>Add new</h2>
+      <Notification message={notification} />
       <PersonForm 
       addPerson={addPerson} 
       persons={persons} 
@@ -159,5 +173,41 @@ const Button = (props) => (
     {props.text}
   </button>
 )
+
+const Notification = (props) => {
+  if (props.message === null) {
+    return null
+  }
+
+  if (props.message.includes('added')){ 
+    const notificationStyle = {
+      color: 'green'
+    }   
+    return (
+    <div style={notificationStyle} className='notification'>
+      {props.message}
+    </div>
+  )}
+
+  if (props.message.includes('has been')){ 
+    const notificationStyle = {
+      color: 'green'
+    }   
+    return (
+    <div style={notificationStyle} className='notification'>
+      {props.message}
+    </div>
+  )}
+
+  if (props.message.includes('was already')){ 
+    const notificationStyle = {
+      color: 'red'
+    }   
+    return (
+    <div style={notificationStyle} className='notification'>
+      {props.message}
+    </div>
+  )}
+}
 
 export default App
