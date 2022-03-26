@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import personsService from './services/persons'
-import axios from 'axios'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -24,11 +23,23 @@ const App = () => {
       number: newNumber
     }
 
-    if (PersonExists(persons, personObject.name) === true){
-      alert(`${personObject.name} already exists.`)
+    if (PersonNameExists(persons, personObject.name) === true){
+      const person = persons.find(p => p.name === personObject.name)
+      if (person.number !== personObject.number){
+        const updatedPersons = [...persons]
+        const toUpdate = persons.indexOf(person)
+
+        if (window.confirm(`Do you want to update ${personObject.name}'s number to ${personObject.number}?`)){
+          personsService
+            .update(person.id, personObject)
+            .then(updatedPersons[toUpdate].number = personObject.number)
+            .then(setPersons(updatedPersons))
+        }
+      }
+      else alert(`${personObject.name} is already in the phone book.`)
     }
-    else
-    
+
+    else   
     personsService
       .create(personObject)
       .then(returnedPerson => {
@@ -39,15 +50,15 @@ const App = () => {
   }
 
   const removePerson = (id) => {
-    const copy = [...persons]
+    const updatedPersons = [...persons]
     const person = persons.find(p => p.id === id)
     const toRemove = persons.indexOf(person)
 
     if (window.confirm(`Do you want to remove ${person.name} from the phonebook?`)){
       personsService
         .remove(id)
-        .then(copy.splice(toRemove, 1))
-        .then(setPersons(copy))
+        .then(updatedPersons.splice(toRemove, 1))
+        .then(setPersons(updatedPersons))
         .catch(error => {
           alert(
             `${person.name} was already deleted from server`
@@ -118,7 +129,7 @@ const Filter = (props) => {
   )
 }
 
-const PersonExists = (persons, newName) => {
+const PersonNameExists = (persons, newName) => {
   return persons.some(function(person) {
     return person.name === newName
   })
