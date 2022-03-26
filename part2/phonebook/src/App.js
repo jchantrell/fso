@@ -21,8 +21,7 @@ const App = () => {
     event.preventDefault()
     const personObject = {
       name: newName,
-      number: newNumber,
-      id: persons.length + 1,
+      number: newNumber
     }
 
     if (PersonExists(persons, personObject.name) === true){
@@ -37,6 +36,26 @@ const App = () => {
         setNewName('')
         setNewNumber('')
       })
+  }
+
+  const removePerson = (id) => {
+    const copy = [...persons]
+    const person = persons.find(p => p.id === id)
+    const toRemove = persons.indexOf(person)
+
+    if (window.confirm(`Do you want to remove ${person.name} from the phonebook?`)){
+      personsService
+        .remove(id)
+        .then(copy.splice(toRemove, 1))
+        .then(setPersons(copy))
+        .catch(error => {
+          alert(
+            `${person.name} was already deleted from server`
+          )
+          setPersons(persons.filter(p => p.id !== id))
+        })
+
+    }
   }
 
   const handleNameChange = (event) => {
@@ -64,7 +83,7 @@ const App = () => {
       handleNameChange={handleNameChange} 
       handleNumberChange={handleNumberChange}/>
       <h2>Numbers</h2>
-      <Persons persons={filteredPersons} />
+      <Persons persons={filteredPersons} remove={removePerson}/>
     </div>
   )
 }
@@ -109,16 +128,25 @@ const Persons = (props) => {
   return (
     <ul>
       {props.persons.map(person => 
-        <Person key={person.name} person={person} />
+        <Person key={person.name} person={person} remove={props.remove}/>
       )}
     </ul>
   )
 }
 
-const Person = ({ person }) => {
+const Person = (props) => {
   return (
-    <li>{person.name} - {person.number}</li>
+    <div>
+      <li>{props.person.name} - {props.person.number} <Button handleClick={() => props.remove(props.person.id)}
+      text="remove" /></li>
+    </div>
   )
 }
+
+const Button = (props) => (
+  <button onClick={props.handleClick}>
+    {props.text}
+  </button>
+)
 
 export default App
