@@ -17,7 +17,7 @@ const App = () => {
       })
   }, [])
 
-  const addPerson = (event) => {
+  const addPerson = async (event) => {
     event.preventDefault()
     const personObject = {
       name: newName,
@@ -31,10 +31,31 @@ const App = () => {
         const toUpdate = persons.indexOf(person)
 
         if (window.confirm(`Do you want to update ${personObject.name}'s number to ${personObject.number}?`)){
+          
           personsService
             .update(person.id, personObject)
-            .then(updatedPersons[toUpdate].number = personObject.number)
-            .then(setPersons(updatedPersons))
+          
+
+            .catch(error => {
+              setNotification(
+                error.response.data.error
+              )
+              setTimeout(() => {
+                setNotification(null)
+              }, 5000)})
+
+              
+              updatedPersons[toUpdate].number = personObject.number
+              setPersons(updatedPersons)
+              setNewName('')
+              setNewNumber('')
+              setNotification(
+                `Updated ${personObject.name}'s number to ${personObject.number}`
+              )
+              setTimeout(() => {
+                setNotification(null)
+              }, 5000)
+              
         }
       }
       else alert(`${personObject.name} is already in the phonebook.`)
@@ -54,6 +75,16 @@ const App = () => {
           setNotification(null)
         }, 5000)
       })
+
+      .catch(error => {
+        setNotification(
+          error.response.data.error
+        )
+        setTimeout(() => {
+          setNotification(null)
+        }, 5000)
+
+      })
   }
 
   const removePerson = (id) => {
@@ -64,19 +95,25 @@ const App = () => {
     if (window.confirm(`Do you want to remove ${person.name} from the phonebook?`)){
       personsService
         .remove(id)
-        .then(setNotification(
-          `${person.name} has been removed from the phonebook.`
-        ))
-        .then(updatedPersons.splice(toRemove, 1))
-        .then(setPersons(updatedPersons))
-        .catch(error => {
+        .then(updatedPerson => {
+          updatedPersons.splice(toRemove, 1)
+          setPersons(updatedPersons)
+          setPersons(persons.filter(p => p.id !== id))
           setNotification(
-            `${person.name} was already removed from the phonebook.`
+            `${person.name} has been removed from the phonebook.`
           )
           setTimeout(() => {
             setNotification(null)
           }, 5000)
-          setPersons(persons.filter(p => p.id !== id))
+        })   
+
+        .catch(error => {
+          setNotification(
+            error.response.data.error
+          )
+          setTimeout(() => {
+            setNotification(null)
+          }, 5000)              
         })
 
     }
@@ -175,39 +212,18 @@ const Button = (props) => (
 )
 
 const Notification = (props) => {
-  if (props.message === null) {
+
+  if (props.message === null){
     return null
   }
 
-  if (props.message.includes('added')){ 
-    const notificationStyle = {
-      color: 'green'
-    }   
+  if (props.message.includes("failed", "already")){
     return (
-    <div style={notificationStyle} className='notification'>
-      {props.message}
-    </div>
-  )}
+      <div className="notification" style={{color: "red"}}>{props.message}</div>
+    )
+  }
 
-  if (props.message.includes('has been')){ 
-    const notificationStyle = {
-      color: 'green'
-    }   
-    return (
-    <div style={notificationStyle} className='notification'>
-      {props.message}
-    </div>
-  )}
-
-  if (props.message.includes('was already')){ 
-    const notificationStyle = {
-      color: 'red'
-    }   
-    return (
-    <div style={notificationStyle} className='notification'>
-      {props.message}
-    </div>
-  )}
+  else return <div className="notification" style={{color: "green"}}>{props.message}</div>
 }
 
 export default App

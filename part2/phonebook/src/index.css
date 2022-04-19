@@ -4,7 +4,6 @@ body {
 
 body, .wrapper {
     display: flex;
-    justify-content: center;
 }
 
 .wrapper {
